@@ -404,6 +404,24 @@ class PathMapper(object):
             if filename == 'platform_agnostic.yaml':
                 return minimal  # network integration test playbook not used by ansible-test
 
+            for command in (
+                    'integration',
+                    'windows-integration',
+                    'network-integration',
+            ):
+                if name == command:
+                    return {
+                        command: self.integration_all_target,
+                    }
+
+            if name.startswith('cloud-config-'):
+                cloud_target = 'cloud/%s/' % name.split('-')[2].split('.')[0]
+
+                if cloud_target in self.integration_targets_by_alias:
+                    return {
+                        'integration': cloud_target,
+                    }
+
             return {
                 'integration': self.integration_all_target,
                 'windows-integration': self.integration_all_target,
@@ -442,6 +460,11 @@ class PathMapper(object):
                 }
 
             return all_tests(self.args)  # test infrastructure, run all tests
+
+        if path.startswith('test/runner/lib/sanity/'):
+            return {
+                'sanity': 'all',  # test infrastructure, run all sanity checks
+            }
 
         if path.startswith('test/runner/'):
             return all_tests(self.args)  # test infrastructure, run all tests

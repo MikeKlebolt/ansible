@@ -19,7 +19,7 @@
 # along with Ansible.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-ANSIBLE_METADATA = {'metadata_version': '1.0',
+ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
@@ -341,7 +341,7 @@ def main():
             storage_domain_service = storage_domains_service.storage_domain_service(sd_id)
             templates_service = storage_domain_service.templates_service()
 
-            # Find the the unregistered Template we want to register:
+            # Find the unregistered Template we want to register:
             templates = templates_service.list(unregistered=True)
             template = next(
                 (t for t in templates if t.name == module.params['name']),
